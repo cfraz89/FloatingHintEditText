@@ -28,11 +28,7 @@ public class FloatingHintEditText extends EditText {
     }
 
     public FloatingHintEditText(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.floatingHintEditTextStyle);
-    }
-
-    public FloatingHintEditText(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+        super(context, attrs);
 
         TypedValue typedValue = new TypedValue();
         getResources().getValue(R.dimen.floatinghintedittext_hint_scale, typedValue, true);
@@ -42,6 +38,7 @@ public class FloatingHintEditText extends EditText {
         mHintColors = getHintTextColors();
         mWasEmpty = TextUtils.isEmpty(getText());
     }
+
 
     @Override
     public int getCompoundPaddingTop() {
@@ -74,6 +71,7 @@ public class FloatingHintEditText extends EditText {
         } else {
             mAnimation = Animation.SHRINK;
         }
+
     }
 
     @Override
@@ -141,4 +139,5 @@ public class FloatingHintEditText extends EditText {
         final float alpha = (float) mAnimationFrame / (mAnimationSteps - 1);
         return from * (1 - alpha) + to * alpha;
     }
+
 }
