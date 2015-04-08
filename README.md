@@ -2,7 +2,7 @@ MaterialEditText
 ====================
 This is an EditText that implements floating hints and inline errors, to match the material design guidelines.
 
-[Example guideline image][example]
+![Example guideline image][example]
 
 This implementation extends EditText directly, so you can substitute FloatingHintEditText for your existing EditTexts and things should Just Work (TM). No container layouts required.
 
