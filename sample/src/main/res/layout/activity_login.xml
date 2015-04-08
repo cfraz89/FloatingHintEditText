@@ -52,7 +52,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:layout_marginBottom="22dp"
+                    android:layout_marginBottom="122dp"
                    />
 
                 <Button
@@ -60,7 +60,7 @@
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:text="@string/action_sign_in"
                     android:textStyle="bold"/>
 

@@ -3,6 +3,7 @@ package com.trogdor.widgets;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Region;
+import android.graphics.Typeface;
 import android.util.TypedValue;
 import com.trogdor.floatinghintedittext.R;
 
@@ -33,23 +34,24 @@ public class ErrorTextHandler {
         if (error != null) {
             paint.set(editText.getPaint());
             paint.setColor(editText.getResources().getColor(android.R.color.holo_red_light));
-
+            paint.setTypeface(Typeface.DEFAULT);
             final float posX = editText.getCompoundPaddingLeft();
-            final float topPosY = editText.getBottom() + errorPadding;
-            final float bottomPosY = topPosY + 20.0f;
+            final float startPosY = editText.getHeight();
+            final float endPosY = startPosY +  errorPadding;
             final float fontSize = editText.getTextSize();
             final float errorSize = fontSize * errorScale;
 
             paint.setTextSize(errorSize);
-            canvas.clipRect(posX,editText.getBottom(), editText.getMeasuredWidth(), getBottomSpace(editText) + 200.0f, Region.Op.UNION);
+            canvas.clipRect(posX, startPosY, editText.getMeasuredWidth(), endPosY + getBottomSpace(editText), Region.Op.UNION);
             if (!isAnimating) {
-                canvas.drawText(error, posX, topPosY, paint);
+                canvas.drawText(error, posX, endPosY, paint);
+                editText.invalidate();
                 return;
             }
             if (animation == Animation.SHOW) {
-                drawAnimationFrame(canvas, editText,  errorSize, posX, bottomPosY, topPosY, 0, 255);
+                drawAnimationFrame(canvas, editText,  errorSize, posX, startPosY, endPosY, 0, 255);
             } else {
-                drawAnimationFrame(canvas, editText, errorSize, posX, topPosY, bottomPosY, 255, 0);
+                drawAnimationFrame(canvas, editText, errorSize, posX, endPosY, startPosY, 255, 0);
             }
 
             animationFrame++;
