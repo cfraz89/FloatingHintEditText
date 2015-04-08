@@ -1,4 +1,4 @@
-package com.thebnich.floatinghintedittext;
+package com.trogdor.widgets;
 
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
@@ -7,63 +7,65 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 import android.util.TypedValue;
 
-public class FloatingHintHandler {
-    final Paint mFloatingHintPaint = new Paint();
+import com.trogdor.floatinghintedittext.R;
 
-    ColorStateList mHintColors;
-    float mHintScale;
-    int mAnimationSteps;
-    boolean mWasEmpty;
-    int mAnimationFrame;
-    Animation mAnimation;
+public class FloatingHintHandler {
+    final Paint paint = new Paint();
+
+    ColorStateList hintColors;
+    final float hintScale;
+    final int animationSteps;
+    boolean wasEmpty;
+    int animationFrame;
+    Animation animation;
 
     public float getHintScale() {
-        return mHintScale;
+        return hintScale;
     }
 
-    public FloatingHintHandler(FloatingHintEditText floatingHintEditText) {
-        this.mAnimation = Animation.NONE;
+    public FloatingHintHandler(MaterialEditText materialEditText) {
+        this.animation = Animation.NONE;
 
         TypedValue typedValue = new TypedValue();
-        floatingHintEditText.getResources().getValue(R.dimen.floatinghintedittext_hint_scale, typedValue, true);
-        mHintScale = typedValue.getFloat();
-        mAnimationSteps = floatingHintEditText.getResources().getInteger(R.dimen.floatinghintedittext_animation_steps);
+        materialEditText.getResources().getValue(R.dimen.floatinghintedittext_hint_scale, typedValue, true);
+        hintScale = typedValue.getFloat();
+        animationSteps = materialEditText.getResources().getInteger(R.dimen.animation_steps);
 
-        mHintColors = floatingHintEditText.getHintTextColors();
-        mWasEmpty = TextUtils.isEmpty(floatingHintEditText.getText());
+        hintColors = materialEditText.getHintTextColors();
+        wasEmpty = TextUtils.isEmpty(materialEditText.getText());
     }
 
-    protected void onDraw(Canvas canvas, FloatingHintEditText editText) {
+    protected void onDraw(Canvas canvas, MaterialEditText editText) {
         final String hint = editText.getHint().toString();
         if (TextUtils.isEmpty(hint)) {
             return;
         }
 
-        final boolean isAnimating = mAnimation != Animation.NONE;
+        final boolean isAnimating = animation != Animation.NONE;
 
         // The large hint is drawn by Android, so do nothing.
         if (!isAnimating && TextUtils.isEmpty(editText.getText())) {
             return;
         }
 
-        mFloatingHintPaint.set(editText.getPaint());
-        mFloatingHintPaint.setColor(
-                mHintColors.getColorForState(editText.getDrawableState(), mHintColors.getDefaultColor()));
+        paint.set(editText.getPaint());
+        paint.setColor(
+                hintColors.getColorForState(editText.getDrawableState(), hintColors.getDefaultColor()));
 
         final float hintPosX = editText.getCompoundPaddingLeft() + editText.getScrollX();
         final float normalHintPosY = editText.getBaseline();
         final float floatingHintPosY = normalHintPosY + editText.getPaint().getFontMetricsInt().top + editText.getScrollY();
         final float normalHintSize = editText.getTextSize();
-        final float floatingHintSize = normalHintSize * mHintScale;
+        final float floatingHintSize = normalHintSize * hintScale;
 
         // If we're not animating, we're showing the floating hint, so draw it and bail.
         if (!isAnimating) {
-            mFloatingHintPaint.setTextSize(floatingHintSize);
-            canvas.drawText(hint, hintPosX, floatingHintPosY, mFloatingHintPaint);
+            paint.setTextSize(floatingHintSize);
+            canvas.drawText(hint, hintPosX, floatingHintPosY, paint);
             return;
         }
 
-        if (mAnimation == Animation.SHRINK) {
+        if (animation == Animation.SHRINK) {
             drawAnimationFrame(canvas, hint, normalHintSize, floatingHintSize,
                     hintPosX, normalHintPosY, floatingHintPosY);
         } else {
@@ -71,14 +73,14 @@ public class FloatingHintHandler {
                     hintPosX, floatingHintPosY, normalHintPosY);
         }
 
-        mAnimationFrame++;
+        animationFrame++;
 
-        if (mAnimationFrame == mAnimationSteps) {
-            if (mAnimation == Animation.GROW) {
-                editText.setHintTextColor(mHintColors);
+        if (animationFrame == animationSteps) {
+            if (animation == Animation.GROW) {
+                editText.setHintTextColor(hintColors);
             }
-            mAnimation = Animation.NONE;
-            mAnimationFrame = 0;
+            animation = Animation.NONE;
+            animationFrame = 0;
         }
 
         editText.invalidate();
@@ -88,37 +90,37 @@ public class FloatingHintHandler {
                                     float hintPosX, float fromY, float toY) {
         final float textSize = lerp(fromSize, toSize);
         final float hintPosY = lerp(fromY, toY);
-        mFloatingHintPaint.setTextSize(textSize);
-        canvas.drawText(hint, hintPosX, hintPosY, mFloatingHintPaint);
+        paint.setTextSize(textSize);
+        canvas.drawText(hint, hintPosX, hintPosY, paint);
     }
 
     private float lerp(float from, float to) {
-        final float alpha = (float) mAnimationFrame / (mAnimationSteps - 1);
+        final float alpha = (float) animationFrame / (animationSteps - 1);
         return from * (1 - alpha) + to * alpha;
     }
 
-    public void onTextChanged(CharSequence text, FloatingHintEditText editText) {
+    public void onTextChanged(CharSequence text, MaterialEditText editText) {
         final boolean isEmpty = TextUtils.isEmpty(text);
 
         // The empty state hasn't changed, so the hint stays the same.
-        if (mWasEmpty == isEmpty) {
+        if (wasEmpty == isEmpty) {
             return;
         }
 
-        mWasEmpty = isEmpty;
+        wasEmpty = isEmpty;
 
         if (isEmpty) {
-            mAnimation = Animation.GROW;
+            animation = Animation.GROW;
             editText.setHintTextColor(Color.TRANSPARENT);
         } else {
-           mAnimation = FloatingHintHandler.Animation.SHRINK;
+           animation = FloatingHintHandler.Animation.SHRINK;
         }
     }
 
-    public int getFloatingHintHeight(FloatingHintEditText editText)
+    public int getFloatingHintHeight(MaterialEditText editText)
     {
         final Paint.FontMetricsInt metrics = editText.getPaint().getFontMetricsInt();
-        return (int) ((metrics.bottom - metrics.top) * mHintScale);
+        return (int) ((metrics.bottom - metrics.top) * hintScale);
 
     }
 

@@ -22,6 +22,7 @@
 
     <style name="Widget.FloatingHintEditText" parent="@android:style/Widget.EditText">
         <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">12dp</item>
     </style>
 
 </resources>

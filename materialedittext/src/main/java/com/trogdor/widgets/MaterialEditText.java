@@ -1,24 +1,24 @@
-package com.thebnich.floatinghintedittext;
+package com.trogdor.widgets;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint.FontMetricsInt;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.widget.EditText;
 
-public class FloatingHintEditText extends EditText {
+public class MaterialEditText extends EditText {
     private final FloatingHintHandler floatingHintHandler;
+    private final ErrorTextHandler errorTextHandler;
+    private CharSequence error;
 
-    public FloatingHintEditText(Context context) {
+    public MaterialEditText(Context context) {
         this(context, null);
     }
 
-    public FloatingHintEditText(Context context, AttributeSet attrs) {
+    public MaterialEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         floatingHintHandler = new FloatingHintHandler(this);
+        errorTextHandler = new ErrorTextHandler(this);
+        error = null;
     }
 
 
@@ -36,14 +36,20 @@ public class FloatingHintEditText extends EditText {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        floatingHintHandler.onDraw(canvas, this);
+    public int getTotalPaddingTop() {
+        return super.getTotalPaddingTop();
     }
 
     @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        floatingHintHandler.onDraw(canvas, this);
+        errorTextHandler.onDraw(canvas, this);
+    }
+
     public void setError(CharSequence error) {
-        super.setError(error);
+        this.error = error;
+        errorTextHandler.setError(error);
         if (error != null && error.length() > 0)
             getBackground().setTint(getResources().getColor(android.R.color.holo_red_light));
         else
@@ -51,7 +57,8 @@ public class FloatingHintEditText extends EditText {
 
     }
 
-
-
-
+    @Override
+    public CharSequence getError() {
+        return error;
+    }
 }

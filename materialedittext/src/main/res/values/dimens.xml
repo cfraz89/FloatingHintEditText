@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="floatinghintedittext_hint_scale" type="dimen" format="float">0.6</item>
+    <item name="animation_steps" type="dimen" format="integer">12</item>
+    <item name="error_scale" type="dimen" format="float">0.6</item>
+    <dimen name="error_padding">6dp</dimen>
+</resources>
+
