@@ -1,10 +1,12 @@
 package com.trogdor.widgets;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import com.trogdor.floatinghintedittext.R;
@@ -23,16 +25,16 @@ public class FloatingHintHandler {
         return hintScale;
     }
 
-    public FloatingHintHandler(MaterialEditText materialEditText) {
+    public FloatingHintHandler(MaterialEditText editText, AttributeSet attrs) {
         this.animation = Animation.NONE;
 
         TypedValue typedValue = new TypedValue();
-        materialEditText.getResources().getValue(R.dimen.floatinghintedittext_hint_scale, typedValue, true);
+        editText.getContext().getResources().getValue(R.dimen.floatinghintedittext_hint_scale, typedValue, true);
         hintScale = typedValue.getFloat();
-        animationSteps = materialEditText.getResources().getInteger(R.dimen.animation_steps);
+        animationSteps = editText.getResources().getInteger(R.dimen.animation_steps);
 
-        hintColors = materialEditText.getHintTextColors();
-        wasEmpty = TextUtils.isEmpty(materialEditText.getText());
+        hintColors = editText.getHintTextColors();
+        wasEmpty = TextUtils.isEmpty(editText.getText());
     }
 
     protected void onDraw(Canvas canvas, MaterialEditText editText) {

@@ -1,13 +1,21 @@
 package com.trogdor.widgets;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.widget.EditText;
+
+import com.trogdor.floatinghintedittext.R;
 
 public class MaterialEditText extends EditText {
     private final FloatingHintHandler floatingHintHandler;
     private final ErrorTextHandler errorTextHandler;
+    private final int errorColor;
     private CharSequence error;
 
     public MaterialEditText(Context context) {
@@ -16,8 +24,11 @@ public class MaterialEditText extends EditText {
 
     public MaterialEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        floatingHintHandler = new FloatingHintHandler(this);
-        errorTextHandler = new ErrorTextHandler(this);
+        errorColor = ColorExtractor.getErrorColor(context, attrs);
+        //if (errorColor == 0)
+        //   errorColor =
+        floatingHintHandler = new FloatingHintHandler(this, attrs);
+        errorTextHandler = new ErrorTextHandler(this, attrs);
         error = null;
     }
 
@@ -51,9 +62,9 @@ public class MaterialEditText extends EditText {
         this.error = error;
         errorTextHandler.setError(error);
         if (error != null && error.length() > 0)
-            getBackground().setTint(getResources().getColor(android.R.color.holo_red_light));
+            getBackground().setColorFilter(errorColor, PorterDuff.Mode.SRC_IN);
         else
-            getBackground().setTint(getResources().getColor(android.R.color.darker_gray));
+            getBackground().clearColorFilter();
 
     }
 

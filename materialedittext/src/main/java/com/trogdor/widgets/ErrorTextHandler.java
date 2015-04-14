@@ -1,9 +1,11 @@
 package com.trogdor.widgets;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Region;
 import android.graphics.Typeface;
+import android.util.AttributeSet;
 import android.util.TypedValue;
 import com.trogdor.floatinghintedittext.R;
 
@@ -12,6 +14,7 @@ import com.trogdor.floatinghintedittext.R;
  */
 public class ErrorTextHandler {
     final Paint paint = new Paint();
+    final int errorColor;
     final float errorScale;
     final int errorPadding;
     final int animationSteps;
@@ -19,12 +22,14 @@ public class ErrorTextHandler {
     Animation animation;
     String error;
 
-    public ErrorTextHandler(MaterialEditText editText)
+    public ErrorTextHandler(MaterialEditText editText, AttributeSet attrs)
     {
+        Context context = editText.getContext();
+        errorColor = ColorExtractor.getErrorColor(editText.getContext(), attrs);
         TypedValue errorScaleTyped = new TypedValue();
-        editText.getResources().getValue(R.dimen.error_scale, errorScaleTyped, true);
+        context.getResources().getValue(R.dimen.error_scale, errorScaleTyped, true);
         errorScale = errorScaleTyped.getFloat();
-        errorPadding = (int) editText.getResources().getDimension(R.dimen.error_padding);
+        errorPadding = (int) context.getResources().getDimension(R.dimen.error_padding);
         animationSteps = editText.getResources().getInteger(R.dimen.animation_steps);
     }
 
@@ -33,7 +38,7 @@ public class ErrorTextHandler {
 
         if (error != null) {
             paint.set(editText.getPaint());
-            paint.setColor(editText.getResources().getColor(android.R.color.holo_red_light));
+            paint.setColor(errorColor);
             paint.setTypeface(Typeface.DEFAULT);
             final float posX = editText.getCompoundPaddingLeft();
             final float startPosY = editText.getHeight();

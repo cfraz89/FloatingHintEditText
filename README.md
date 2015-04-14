@@ -4,7 +4,27 @@ This is an EditText that implements floating hints and inline errors, to match t
 
 ![Example guideline image][example]
 
-This implementation extends EditText directly, so you can substitute FloatingHintEditText for your existing EditTexts and things should Just Work (TM). No container layouts required.
+Usage
+-------
+Simply use in place of a normal EditText (its a subclass, so should be a drop-in replacement).
+
+    <com.trogdor.widgets.MaterialEditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_email"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:layout_marginBottom="22dp">
+
+To trigger the error state, use the normal .setError() method:
+    mEmailView.setError("This field is required!");
+
+And to clear it:
+    mEmailView.setError(null)
+
+The errorColor attribute can be used to change the color of the line and error text in error state.
 
 License
 -------
