@@ -19,9 +19,11 @@ Simply use in place of a normal EditText (its a subclass, so should be a drop-in
         android:layout_marginBottom="22dp">
 
 To trigger the error state, use the normal .setError() method:
+
     mEmailView.setError("This field is required!");
 
 And to clear it:
+
     mEmailView.setError(null)
 
 The errorColor attribute can be used to change the color of the line and error text in error state.
@@ -38,6 +40,7 @@ License
 Credits
 -------
 Code based off [thebnich/FloatingHintEditText][fork]
+
 Original concept: http://mattdsmith.com/float-label-pattern/
 
 [fork]: https://github.com/thebnich/FloatingHintEditText
